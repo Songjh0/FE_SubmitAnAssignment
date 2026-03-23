@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from 'react-bootstrap';
+import TodoModal from "./TodoModal";
 
 type Todo = {
   id : number;
@@ -45,7 +46,7 @@ const Todolist : React.FC = () => {
 
     const handleTodoClick = (todo : Todo) => {
       setShowDetail(true);
-      setSelectedTodo(todo);
+      setSelectedTodo(null);
     }
 
     const handleCloseDetail = () => {
@@ -56,7 +57,7 @@ const Todolist : React.FC = () => {
     <div>
       <h1>{title}</h1>
       <p></p>
-      <h1 className="container">
+      <div className="container">
         <div>
           <input type="text"
             placeholder="할 일 입력"
@@ -76,7 +77,7 @@ const Todolist : React.FC = () => {
                   onChange={()=>{
                     handleCheckedChange(todo.id);
                   }}></input>
-                  <span>
+                  <span onClick={() => handleTodoClick(todo)}>
                     {
                       todo.isChecked ? 
                       <del>{todo.text}</del>
@@ -92,7 +93,8 @@ const Todolist : React.FC = () => {
             }
         </ul>
         </div>     
-      </h1>
+      </div>
+      <TodoModal show={showDetail} todo={selectedTodo} handleClose={handleCloseDetail}></TodoModal>
     </div>
   )
 }
