@@ -4,13 +4,15 @@ import './App.css';
 import Todolist from "./Todolist";
 import MapTest from "./MapTest";
 import Clock from "./Timer";
+import MyWeather from "./MyWeather";
 
 function App() {
   let name = "리액트";
   return (
     <div className="container">
       <Todolist></Todolist>
-      <Clock></Clock>
+      {/* <Clock></Clock> */}
+      <MyWeather weather="맑음">일기 예보</MyWeather>
     </div>
   );
 }
