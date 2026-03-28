@@ -1,16 +1,11 @@
-import { type TypedUseSelectorHook, useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../store";
+import { useDispatch, useSelector, type TypedUseSelectorHook } from "react-redux";
+import { type AppDispatch, type RootState } from "../store";
 
-// const dispatch = useDispatch();
+export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-// // ts가 추론을 못 하면 -> 개발자가 타입을 지정
-// const logger = useSelector(state => state.logger);
+export const useTypedDispatch = () => useDispatch<AppDispatch>;
 
-export const useTypeSelector: TypedUseSelectorHook<RootState> = useSelector
-const useTypedDispatch = () => useDispatch<AppDispatch>();
-
-const logger = useSelector((state: RootState) => state.logger);
+// const logger = useSelector((state: RootState) => state.logger);
 
 // interface Obj<T> {
 //   name: T;
@@ -24,7 +19,7 @@ const logger = useSelector((state: RootState) => state.logger);
 // }
 
 // const obj: Obj<State> = {
-//   name : {
+//   name: {
 //     state: {
 //       data: 'abcd',
 //       loading: false
