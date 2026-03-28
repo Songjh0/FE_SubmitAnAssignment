@@ -66,7 +66,7 @@ const DropDownForm: FC<TDropDownFormProps> = ({
             logId: v4(),
             logMessage: `일 생성하기: ${text}`,
             logAuthor: "User",
-            logTimestamp: Stirng(Date.now())
+            logTimestamp: String(Date.now())
           })
         )
       }

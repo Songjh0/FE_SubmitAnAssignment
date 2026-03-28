@@ -1,8 +1,14 @@
 import React, { useRef, useState, type FC } from 'react';
-import { useTypedSelector } from "../../hooks/redux";
+import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
 import SideForm from "./SideForm/SideForm";
-import { FiPlusCircle } from "react-icons/fi";
+import { FiLogIn, FiPlusCircle } from "react-icons/fi";
 import { addSection, title, container, addButton, boardItem } from "./BoardList.css";
+import { GoSignOut } from "react-icons/go";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "../../firebase";
+import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import { removeUser, setUser } from "../../store/slices/userSlice";
+import { useAuth } from "../../hooks/useAuth";
 
 type TBoardListProps = {
   activeBoardId: string;
@@ -10,19 +16,50 @@ type TBoardListProps = {
 }
 
 export const BoardList:FC<TBoardListProps> = ({
-  // _activeBoardId,
-  // _setActiveBoardId
+  _activeBoardId,
+  _setActiveBoardId
 }) => {
-
+  const dispatch = useTypedDispatch();
   const { boardArray } = useTypedSelector(state => state.board);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const { isAuth } = useAuth();
+
+  const handleLogin = () => {
+    singInWithPopup(auth, provider).then(userCredential => {
+      console.log(userCrendential);
+        dispatch(
+          setUser({
+            email: userCredential.user.email,
+            id: userCredential.user.uid,
+          })
+        )
+    })
+    .catch(error => {
+      console.error(error);
+    })
+  }
 
   const handleClick = () => {
     setIsFormOpen(!isFormOpen)
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
+  }
+
+  const handleSignOut = () => {
+    signOut(auth)
+    .then(()=>{
+      dispatch(
+        removeUser()
+      )
+    })
+    .catch((error)=>{
+      console.error(error);
+    })
   }
 
   return (
@@ -48,6 +85,14 @@ export const BoardList:FC<TBoardListProps> = ({
           : 
           <FiPlusCircle className={addButton} onClick={handleClick}/>
         }
+
+        { isAuth 
+          ?
+            <GoSignOut className={addButton} onClick={handleSignOut}/>
+          :
+          <FiLogIn className={addButton} onClick={handleLogin}/>
+        }
+
       </div>
     </div>
   )
